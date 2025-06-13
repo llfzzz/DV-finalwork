@@ -21,8 +21,8 @@ export const teamMembers: TeamMember[] = [
     coverImage: '/assets/images/wys-bg.jpg',
     shareContent: {
       title: '让世界都要颤抖的男人',
-      description: '亚洲的颜值就靠两个人撑着，彭于晏已经慢慢老去，我不知道还能撑多久，感觉好累！',
-      skills: ['长沙彭于晏', '湖财乡里别'],
+      description: '人生本来就是不公平的 你慢慢适应吧',
+      skills: ['抓水母','骚扰章鱼哥'],
       contact: 'W_Y_S-Echo'
     }
   },
