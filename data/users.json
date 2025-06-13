@@ -1,0 +1,22 @@
+[
+  {
+    "id": "mbt5la543eu26oaw37m",
+    "createdAt": "2025-06-12T09:05:25.912Z",
+    "email": "luofangzheng26@gmail.com",
+    "username": "llfzzz",
+    "password": "$2b$12$lF8fEH8wQo.I9tKrWmyjDu0P8BjoZ/rKgp/REDeZvfn2e8IJIRfb.",
+    "avatar": "/assets/icons/lfz.jpeg",
+    "lastLoginAt": "2025-06-13T03:47:27.715Z",
+    "isVerified": true
+  },
+  {
+    "id": "mbtfc3x6hwkatal7f5",
+    "createdAt": "2025-06-12T13:38:14.106Z",
+    "email": "3031998261@qq.com",
+    "username": "test",
+    "password": "$2b$12$vky3U6IU3WsWJdaaCi2lI.4mtWxlSYjFzU.f.QoEwoCR/XjWIht4y",
+    "avatar": "/assets/icons/lfz.jpeg",
+    "lastLoginAt": "2025-06-12T13:38:14.106Z",
+    "isVerified": true
+  }
+]

@@ -1,0 +1,464 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+/* @theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+} */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+
+/* 操作区域样式 */
+.operate-area {
+  background: linear-gradient(145deg, #ffffff 0%, #f7fafc 100%);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+  transition: box-shadow 0.3s ease;
+}
+
+.operate-area:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.operate-title {
+  color: #2d3748;
+  border-bottom: 2px solid #cbd5e0;
+  padding-bottom: 8px;
+  position: relative;
+}
+
+.operate-title::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 40px;
+  height: 2px;
+  background: #4299e1;
+}
+
+/* 展开区域样式 */
+.expand-section {
+  transition: all 0.3s ease;
+}
+
+.expand-header {
+  background: #edf2f7;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.expand-header:hover {
+  background: #e2e8f0;
+  transform: translateX(2px);
+}
+
+.expand-header::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: #4299e1;
+  transform: scaleY(0);
+  transition: transform 0.2s ease;
+}
+
+.expand-header:hover::before {
+  transform: scaleY(1);
+}
+
+.expand-content {
+  background: #f7fafc;
+  border-style: dashed;
+  border-color: #cbd5e0;
+  border-radius: 4px;
+  animation: slideDown 0.3s ease;
+  position: relative;
+}
+
+@keyframes slideDown {
+  from { 
+    opacity: 0; 
+    transform: translateY(-10px);
+    max-height: 0;
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0);
+    max-height: 200px;
+  }
+}
+
+/* 功能按钮样式 */
+.function-buttons {
+  margin-top: 16px;
+}
+
+.function-btn {
+  background: linear-gradient(145deg, #ffffff 0%, #f1f5f9 100%);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.function-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transition: left 0.5s ease;
+}
+
+.function-btn:hover {
+  background: linear-gradient(145deg, #e2e8f0 0%, #cbd5e0 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.function-btn:hover::before {
+  left: 100%;
+}
+
+.function-btn:active {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* 操作描述文字 */
+.operate-desc {
+  color: #718096;
+  font-style: italic;
+  line-height: 1.4;
+  position: relative;
+  padding-left: 12px;
+}
+
+/* 绘图区域样式 */
+.draw-area {
+  position: relative;
+  overflow: hidden;
+}
+
+/* 团队成员盒子样式 */
+.team-card {
+  width: 280px;
+  height: 220px;
+  background-color: white;
+  border: 2px solid black;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+/* 团队成员姓名样式 */
+.team-name {
+  font-size: 1.125rem;
+  font-weight: bold;
+  margin: 0 0 8px 0;
+  color: black;
+}
+
+/* 团队成员职责样式 */
+.team-position {
+  font-size: 1rem;
+  margin: 0 0 8px 0;
+  color: #666;
+}
+
+/* 团队成员介绍列表样式 */
+.team-intro {
+  margin: 0;
+  padding-left: 16px;
+  font-size: 0.875rem;
+}
+
+.team-intro li {
+  margin-bottom: 2px;
+}
+
+/* 折叠组件样式 */
+.collapsible-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.collapsible-item {
+  width: 100%;
+}
+
+.collapsible-header {
+  width: 100%;
+  background: linear-gradient(145deg, #ffffff 0%, #f1f5f9 100%);
+  border: 2px solid black;
+  padding: 8px 12px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.collapsible-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transition: left 0.5s ease;
+}
+
+.collapsible-header:hover {
+  background: linear-gradient(145deg, #e2e8f0 0%, #cbd5e0 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.collapsible-header:hover::before {
+  left: 100%;
+}
+
+.collapsible-header:active {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.triangle {
+  transition: transform 0.2s ease;
+  font-size: 0.875rem;
+  color: #4299e1;
+  font-weight: bold;
+}
+
+.triangle-expanded {
+  transform: rotate(90deg);
+}
+
+.collapsible-content {
+  background: #f7fafc;
+  border: 2px solid black;
+  border-top: none;
+  padding: 12px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  border-radius: 0 0 4px 4px;
+  animation: slideDown 0.3s ease;
+  position: relative;
+}
+
+.collapsible-content::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: #4299e1;
+  border-radius: 0 0 0 4px;
+}
+
+.content-text {
+  font-size: 0.875rem;
+  color: #4a5568;
+  font-style: italic;
+}
+
+/* PageLoader 组件样式 */
+.page-loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  transition: opacity 0.5s ease-out;
+}
+
+/* 派大星容器 */
+.patrick-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+/* 派大星图片 */
+.patrick-image {
+  width: 400px;
+  height: auto;
+  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.2));
+}
+
+/* 水晶球加载器位置 */
+.crystal-ball-loader {
+  position: absolute;
+  top: 43%;
+  left: 19.5%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+}
+
+/* 水晶球进度标签 */
+.crystal-progress-label {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333333;
+  text-shadow: 0 1px 3px rgba(255, 255, 255, 0.8);
+}
+
+/* 加载文字区域 */
+.loading-text {
+  text-align: center;
+  color: #333333;
+}
+
+.page-loader-title {
+  font-size: 28px;
+  font-weight: bold;
+  color: #333333;
+  margin-bottom: 10px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes crystalPulse {
+  0%, 100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  50% {
+    transform: scale(1.1);
+    filter: brightness(1.2);
+  }
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.2);
+  }
+}
+
+/* 点赞动画效果 */
+@keyframes floatUp {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-20px) scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-40px) scale(0.8);
+  }
+}
+
+.floating-like {
+  animation: floatUp 3s ease-out forwards;
+}
+
+/* 响应式设计 */
+@media (max-width: 1024px) {
+  .operate-area {
+    width: 25% !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .operate-area {
+    width: 100% !important;
+    margin-bottom: 16px;
+  }
+  
+  .draw-area {
+    padding: 12px;
+  }
+  
+  .team-card {
+    position: static !important;
+    margin: 8px auto;
+    width: 240px;
+    height: 180px;
+  }
+  
+  main {
+    flex-direction: column !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-title h1 {
+    font-size: 1rem;
+    padding: 0 8px;
+  }
+  
+  .operate-title {
+    font-size: 1rem;
+  }
+  
+  .team-card {
+    width: 200px;
+    height: 160px;
+  }
+}
