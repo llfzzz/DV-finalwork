@@ -16,7 +16,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "数据可视化平台",
+  title: "派大星王朝",
   description: "基于next.js的数据可视化平台-来自23级大数据3班王宇盛小组的期末作业",
 };
 
