@@ -73,7 +73,7 @@ export const teamMembers: TeamMember[] = [
     coverImage: '/assets/images/lfz-bg.jpg',
     shareContent: {
       title: '成熟男人',
-      description: '梦想C位出道',
+      description: '梦想C位出道,希望瞎写的代码都能跑',
       skills: ['唱', '跳', 'rap', '篮球'],
       contact: '我只用扣扣'
     }
