@@ -90,7 +90,6 @@ src/
 - 条形图 (BarChart)
 - 箱线图 (BoxPlot)
 - 日历热力图 (CalendarHeatmap)
-- 热力图 (Heatmap)
 - 直方图 (Histogram)
 - 平行坐标图 (ParallelCoordinatesChart)
 - 饼图 (PieChart)
@@ -105,28 +104,10 @@ src/
 - 流畅的动画效果
 - 友好的消息提示系统
 
-## 📦 部署
-
-### Vercel 部署（推荐）
-
-最简单的部署方式是使用 [Vercel 平台](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme)。
-
-查看 [Next.js 部署文档](https://nextjs.org/docs/app/building-your-application/deploying) 了解更多详情。
-
-### 其他部署选项
-
-- **Netlify**: 支持静态站点部署
-- **Railway**: 支持全栈应用部署
-- **Docker**: 容器化部署
-
-## 🤝 贡献
-
-欢迎提交 Issue 和 Pull Request 来改进这个项目！
-
 ## 📄 许可证
 
 本项目采用 MIT 许可证。
 
 ---
 
-基于 [Next.js](https://nextjs.org) 构建，使用 [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app) 脚手架创建。
+基于 [Next.js](https://nextjs.org) 构建
