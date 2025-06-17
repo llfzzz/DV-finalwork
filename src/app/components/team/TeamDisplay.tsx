@@ -3,7 +3,7 @@ import { Card, Tag, Avatar, Row, Col, Button, Divider, Dialog } from 'tdesign-re
 import { UserIcon, ChatIcon, ShareIcon, ThumbUpIcon } from 'tdesign-icons-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { PersonalCommentDialog } from '../CommentComponents';
-import { TeamMember, teamMembers } from '@/data/teamMembers';
+import { TeamMember, teamMembers } from '@/types/teamMembers';
 
 interface FloatingLike {
   id: number;

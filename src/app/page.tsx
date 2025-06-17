@@ -8,7 +8,7 @@ import ChartRenderer from "./components/ChartRenderer";
 import PageLoader from "./components/ui/PageLoader";
 import Header from "./components/layout/Header";
 import MemberDetail from "./components/team/MemberDetail";
-import { teamMembersMap } from "@/data/teamMembers";
+import { teamMembersMap } from "@/types/teamMembers";
 
 export default function Home() {
   const [currentChart, setCurrentChart] = useState<string | null>(null);

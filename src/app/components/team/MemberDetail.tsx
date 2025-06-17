@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, Avatar, Tag } from 'tdesign-react';
 import { UserIcon } from 'tdesign-icons-react';
 import { InlineCommentDisplay } from '../CommentComponents';
-import { TeamMember } from '@/data/teamMembers';
+import { TeamMember } from '@/types/teamMembers';
 
 interface MemberDetailProps {
   memberName: string;

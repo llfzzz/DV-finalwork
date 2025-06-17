@@ -6,7 +6,7 @@ import { UserIcon, LoginIcon, LogoutIcon } from 'tdesign-icons-react';
 import { useAuth } from '@/contexts/AuthContext';
 import AuthModal from '.././auth/AuthModal';
 import { showMessage } from '@/lib/message';
-import { teamMembers } from '@/data/teamMembers';
+import { teamMembers } from '@/types/teamMembers';
 
 import type { MenuValue } from 'tdesign-react';
 
