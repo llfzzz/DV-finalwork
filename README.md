@@ -68,6 +68,10 @@ src/
 └── types/                 # TypeScript 类型定义
 ```
 
+## 组件库
+
+本项目主要使用 [TDesign React](https://tdesign.tencent.com/react/overview) 作为核心 UI 组件库。TDesign 由腾讯开源，提供了丰富的现代化 React 组件，涵盖表单、弹窗、消息提示、布局、数据展示等多种场景，极大提升了开发效率和界面一致性。项目中的表单、弹窗、按钮、消息提示等均大量采用 TDesign 组件实现，保证了界面风格统一且交互体验优秀。
+
 ## ✨ 主要功能
 
 ### 🔐 用户认证
