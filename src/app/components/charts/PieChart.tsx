@@ -148,7 +148,8 @@ export default function PieChart({ chartType }: PieChartProps) {
 
         const infectionsData = parseCSV(infectionsText);
         const deathsData = parseCSV(deathsText);
-        const recoveriesData = parseCSV(recoveriesText);        const aggregatedData = aggregateByProvince(infectionsData, deathsData, recoveriesData);
+        const recoveriesData = parseCSV(recoveriesText);        
+        const aggregatedData = aggregateByProvince(infectionsData, deathsData, recoveriesData);
         setData(aggregatedData);
         
         // 设置可用省份列表
@@ -307,7 +308,8 @@ export default function PieChart({ chartType }: PieChartProps) {
           .transition()
           .duration(200)
           .attr('transform', 'translate(0,0)');        
-          d3.selectAll('.pie-tooltip').remove();
+          d3.selectAll('.pie-tooltip')
+          .remove();
       });
 
     // 添加右侧图例
@@ -444,7 +446,8 @@ export default function PieChart({ chartType }: PieChartProps) {
   };
 
   return (
-    <div className="w-full h-full p-6 bg-white">      <div className="mb-6">        
+    <div className="w-full h-full p-6 bg-white">      
+    <div className="mb-6">        
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-bold text-gray-800">
             COVID-19 数据饼图分析
@@ -508,7 +511,8 @@ export default function PieChart({ chartType }: PieChartProps) {
             : '显示全国累计感染、死亡、康复数据对比'
           }
         </div>
-      </div>      <div className="flex justify-center">
+      </div>      
+      <div className="flex justify-center">
         {(() => {
           const pieData = preparePieData();
           if (displayMode === 'selected' && selectedProvinces.length === 0) {
@@ -530,10 +534,6 @@ export default function PieChart({ chartType }: PieChartProps) {
           }
           return <svg ref={svgRef}></svg>;
         })()}
-      </div>      <div className="mt-6 text-xs text-gray-500 text-center">
-        * 鼠标悬停在饼图切片上可查看详细信息
-        <br />
-        * 数据来源：COVID-19累计统计数据
       </div>
     </div>
   );

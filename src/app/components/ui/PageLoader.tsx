@@ -11,7 +11,7 @@ interface PageLoaderProps {
 
 export default function PageLoader({ 
   onLoadComplete, 
-  minLoadTime = 3000, // 增加到3秒
+  minLoadTime = 3000, // 默认最小加载时间为3秒
   children 
 }: PageLoaderProps) {
   const [percent, setPercent] = useState(0);
@@ -79,7 +79,7 @@ export default function PageLoader({
       // 进度条动画
     const progressTimer = setInterval(() => {
       setPercent((prevPercent) => {
-        const newPercent = prevPercent + Math.random() * 8 + 2; // 随机增加2-10%（更慢）
+        const newPercent = prevPercent + Math.random() * 8 + 2;
         return newPercent >= 100 ? 100 : newPercent;
       });
     }, 300);
@@ -120,7 +120,8 @@ export default function PageLoader({
             src="./assets/images/loading.png"
             alt="Loading Patrick" 
             className="patrick-image"
-          />          <div className="crystal-ball-loader">
+          />          
+          <div className="crystal-ball-loader">
             {showProgress && (
               <Progress 
                 theme="circle" 

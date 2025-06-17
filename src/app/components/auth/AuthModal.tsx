@@ -472,7 +472,8 @@ export default function AuthModal({ visible, onClose, mode = 'login' }: AuthModa
       width={480}
       destroyOnClose
     >
-      <div className="space-y-4 p-4">        {mode === 'register' ? (
+      <div className="space-y-4 p-4">        
+        {mode === 'register' ? (
           // 注册模式
           <>
             {step === 'email' ? (
@@ -615,7 +616,9 @@ export default function AuthModal({ visible, onClose, mode = 'login' }: AuthModa
                     placeholder="请输入您的邮箱地址"
                     clearable
                   />
-                </div>                {loginMethod === 'password' && (
+                </div>                
+                
+                {loginMethod === 'password' && (
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       密码
@@ -659,7 +662,9 @@ export default function AuthModal({ visible, onClose, mode = 'login' }: AuthModa
                     maxlength={6}
                     clearable
                   />
-                </div>                {isNewUser && (
+                </div>                
+                
+                {isNewUser && (
                   <>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -674,7 +679,8 @@ export default function AuthModal({ visible, onClose, mode = 'login' }: AuthModa
                       <div className="text-xs text-gray-500 mt-1">
                         2-20个字符，支持中英文、数字、下划线
                       </div>
-                    </div>                    <div>
+                    </div>                    
+                    <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         密码 <span className="text-red-500">*</span>
                       </label>

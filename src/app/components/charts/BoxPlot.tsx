@@ -42,7 +42,8 @@ export default function BoxPlot({ chartType }: BoxPlotProps) {
   const [data, setData] = useState<BoxPlotData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<'infections' | 'deaths' | 'recoveries'>('infections');  const [selectedProvinces, setSelectedProvinces] = useState<(string | null)[]>([null, null, null, null, null]);
+  const [selectedCategory, setSelectedCategory] = useState<'infections' | 'deaths' | 'recoveries'>('infections');  
+  const [selectedProvinces, setSelectedProvinces] = useState<(string | null)[]>([null, null, null, null, null]);
   const [groupBy, setGroupBy] = useState<'province' | 'time'>('province');
   const [selectedOutlier, setSelectedOutlier] = useState<{ value: number; region: string; date: string; category: string } | null>(null);
 
@@ -125,7 +126,7 @@ export default function BoxPlot({ chartType }: BoxPlotProps) {
   const processDataForBoxPlot = async (
     selectedProvincesFiltered: string[]
   ): Promise<BoxPlotData[]> => {
-    // 读取真实的CSV数据
+    // 读取CSV数据
     try {
       const [infectionsResponse, deathsResponse, recoveriesResponse] = await Promise.all([
         fetch('/data/China_accumulated_infections.csv'),
@@ -648,7 +649,8 @@ export default function BoxPlot({ chartType }: BoxPlotProps) {
                 关闭
               </button>
             </div>
-          </div>        </div>
+          </div>        
+          </div>
       )}
     </div>
   );

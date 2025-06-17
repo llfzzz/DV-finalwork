@@ -2,7 +2,6 @@
 
 import React, { useRef, useEffect, useState } from 'react';
 import * as d3 from 'd3';
-import { Button } from 'tdesign-react';
 import ProvinceSelector from '../ui/ProvinceSelector';
 import ChartDescriptionComponent from '../ui/ChartDescription';
 import { chartDescriptions } from '../../../types/chartDescriptions';
@@ -167,7 +166,9 @@ export default function ScatterPlot({ chartType }: ScatterPlotProps) {
 
         const infectionsData = parseCSV(infectionsText);
         const deathsData = parseCSV(deathsText);
-        const recoveriesData = parseCSV(recoveriesText);        const aggregatedData = aggregateByProvince(infectionsData, deathsData, recoveriesData);
+        const recoveriesData = parseCSV(recoveriesText);        
+        const aggregatedData = aggregateByProvince(infectionsData, deathsData, recoveriesData);
+
         setData(aggregatedData);
         
         // 设置可用省份列表
@@ -380,10 +381,10 @@ export default function ScatterPlot({ chartType }: ScatterPlotProps) {
           .style('opacity', selectedRegions.length === 0 || selectedRegions.includes(d.province) ? 0.8 : 0.3)
           .attr('stroke-width', 1);
         
-        d3.selectAll('.tooltip').remove();
+        d3.selectAll('.tooltip')
+        .remove();
       })
       .on('click', function(event, d) {
-        // 确保移除提示工具
         d3.selectAll('.tooltip').remove();
       });
 
@@ -477,7 +478,9 @@ export default function ScatterPlot({ chartType }: ScatterPlotProps) {
     );
   }
 
-  return (    <div className="w-full h-full p-4">      <div className="mb-4">
+  return (    
+  <div className="w-full h-full p-4">      
+  <div className="mb-4">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-bold text-gray-800">COVID-19 感染数与死亡数相关性分析</h2>
           <ChartDescriptionComponent description={chartDescriptions.scatterPlot} />
@@ -508,7 +511,8 @@ export default function ScatterPlot({ chartType }: ScatterPlotProps) {
                 清除选择 ({selectedRegions.length})
               </button>
             )}
-          </div>          {/* 省份选择器 */}
+          </div>          
+          {/* 省份选择器 */}
           <ProvinceSelector
             availableProvinces={availableProvinces}
             selectedProvinces={selectedProvinces}
@@ -521,15 +525,8 @@ export default function ScatterPlot({ chartType }: ScatterPlotProps) {
             maxHeight="12rem"
           />
         </div>
-
-        {/* 图表说明 */}
-        <div className="text-sm text-gray-600 mb-4">
-          <p><strong>图表说明：</strong></p>
-          <p>• X轴：累计感染数 | Y轴：累计死亡数</p>
-          <p>• 点的大小：表示疫情严重程度（感染数 + 死亡数×10）</p>
-          <p>• 点的颜色：按省份区分（图例显示疫情最严重的前10个省份）</p>
-        </div>
-      </div>      {/* 图表 */}
+      </div>      
+      {/* 图表 */}
       <div className="w-full overflow-x-auto">
         <svg 
           ref={svgRef} 

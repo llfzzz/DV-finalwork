@@ -40,7 +40,8 @@ const TeamMemberCard: React.FC<{ member: TeamMember; style?: React.CSSProperties
         setFloatingLikes(prev => prev.filter(like => like.id !== newLike.id));
       }, 3000);
     }
-  };    const handleChat = () => {
+  };    
+  const handleChat = () => {
     // 评论功能需要登录
     if (requireAuth()) {
       setCommentDialogVisible(true);
@@ -78,7 +79,8 @@ const TeamMemberCard: React.FC<{ member: TeamMember; style?: React.CSSProperties
           <Tag theme={member.role === 'leader' ? 'primary' : 'success'}>
             {member.position}
           </Tag>
-        }      bordered
+        }      
+        bordered
         cover={member.coverImage || "https://tdesign.gtimg.com/site/source/card-demo.png"}
         style={{ width: '320px', ...style }}      
         header={
@@ -162,7 +164,7 @@ const TeamMemberCard: React.FC<{ member: TeamMember; style?: React.CSSProperties
               {member.shareContent.description}
             </p>
               <div style={{ marginBottom: '15px' }}>
-              <strong style={{ display: 'block', marginBottom: '8px' }}>技能：</strong>
+              <strong style={{ display: 'block', marginBottom: '8px' }}>标签：</strong>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                 {member.shareContent.skills.map((skill, index) => (
                   <Tag key={index} variant="light" theme="primary">

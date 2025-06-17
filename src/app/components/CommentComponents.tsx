@@ -471,7 +471,8 @@ export function PersonalCommentDialog({ memberName, visible, onClose }: Personal
     }
 
     setLoading(true);
-    try {      const response = await fetch('/api/comments', {
+    try {      
+      const response = await fetch('/api/comments', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

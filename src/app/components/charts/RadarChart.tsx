@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import * as d3 from 'd3';
-import { Button } from 'tdesign-react';
 import RadarProvinceSelector from '../ui/RadarProvinceSelector';
 import ChartDescriptionComponent from '../ui/ChartDescription';
 import { chartDescriptions } from '../../../types/chartDescriptions';
@@ -238,15 +237,23 @@ export default function RadarChart({ chartType }: RadarChartProps) {
 
   // 绘制雷达图
   useEffect(() => {
-    if (!svgRef.current || radarData.length === 0) return;
+    if (!svgRef.current || radarData.length === 0) 
+      return;
 
     const svg = d3.select(svgRef.current);
-    svg.selectAll('*').remove();    const width = 600;
+    svg.selectAll('*')
+    .remove();  
+
+    // 设置图表尺寸和边距
+    const width = 600;
     const height = 600;
     const margin = { top: 80, right: 80, bottom: 80, left: 80 };
     const radius = Math.min(width - margin.left - margin.right, height - margin.top - margin.bottom) / 2;
 
-    svg.attr('width', width).attr('height', height).style('display', 'block').style('margin', '0 auto');
+    svg.attr('width', width)
+    .attr('height', height)
+    .style('display', 'block')
+    .style('margin', '0 auto');
 
     const g = svg.append('g')
       .attr('transform', `translate(${width / 2}, ${height / 2})`);
@@ -309,7 +316,9 @@ export default function RadarChart({ chartType }: RadarChartProps) {
         .attr('font-weight', 'bold')
         .attr('fill', '#333')
         .text(axis);
-    });    // 绘制数据区域和线条
+    });    
+    
+    // 绘制数据区域和线条
     radarData.forEach((series, seriesIndex) => {
       const pathData: [number, number][] = series.data.map((d, i) => {
         const angle = angleSlice * i - Math.PI / 2;
@@ -317,7 +326,9 @@ export default function RadarChart({ chartType }: RadarChartProps) {
         const x = Math.cos(angle) * value;
         const y = Math.sin(angle) * value;
         return [x, y] as [number, number];
-      });// 创建路径生成器
+      });
+      
+      // 创建路径生成器
       const lineGenerator = d3.line<[number, number]>()
         .x(d => d[0])
         .y(d => d[1])
@@ -399,7 +410,9 @@ export default function RadarChart({ chartType }: RadarChartProps) {
     );
   }
 
-  return (    <div className="w-full">      <div className="mb-4 space-y-4">
+  return (    
+  <div className="w-full">      
+  <div className="mb-4 space-y-4">
         <div className="flex justify-between items-center">
           <h3 className="text-2xl font-bold text-gray-800">COVID-19 多维数据雷达图</h3>
           <ChartDescriptionComponent description={chartDescriptions.radarChart} />
@@ -413,18 +426,12 @@ export default function RadarChart({ chartType }: RadarChartProps) {
           loading={loading}
           maxSelection={6}
         />
+      </div>   
 
-        {/* 说明文字 */}
-        <div className="text-sm text-gray-600">
-          <p>• 图表显示各省份在5个维度上的相对表现（已归一化处理）</p>
-          <p>• 数值越大，距离圆心越远</p>
-          <p>• 基于截止到2020年2月29日的累计数据</p>
-          <p>• 选择不同省份可以进行多维度对比分析</p>
-        </div>
-      </div>      {/* 雷达图 */}
       <div className="border rounded-lg p-4 bg-white">
         <svg ref={svgRef}></svg>
-      </div>      {/* 数据统计 */}
+      </div>      
+      {/* 数据统计 */}
       {selectedProvinces.length > 0 && (
         <div className="mt-6">
           <h4 className="text-sm font-medium mb-2">选中省份详细数据:</h4>
@@ -457,13 +464,7 @@ export default function RadarChart({ chartType }: RadarChartProps) {
             </table>
           </div>
         </div>
-      )}      <div className="mt-4 text-sm text-gray-600">
-        <p>• 该雷达图展示了COVID-19疫情期间不同省份的多维数据对比</p>
-        <p>• 数据来源于2020年1月至2月的官方统计</p>
-        <p>• 可以选择最多6个省份进行同时比较分析</p>
-        <p>• 五个维度分别为：累计感染、累计死亡、累计康复、死亡率、康复率</p>
-        <p>• 使用快速选择按钮可以方便地切换不同的省份组合</p>
-      </div>
+      )}
     </div>
   );
 }

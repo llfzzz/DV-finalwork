@@ -1,6 +1,6 @@
 import React from 'react';
-import { Card, Avatar, Tag, Button, Space } from 'tdesign-react';
-import { UserIcon, ChatIcon } from 'tdesign-icons-react';
+import { Card, Avatar, Tag } from 'tdesign-react';
+import { UserIcon } from 'tdesign-icons-react';
 import { InlineCommentDisplay } from '../CommentComponents';
 import { TeamMember } from '@/data/teamMembers';
 
@@ -41,7 +41,7 @@ export default function MemberDetail({ memberName, memberInfo }: MemberDetailPro
             )}
               {memberInfo.shareContent.skills.length > 0 && (
               <div style={{ marginBottom: '15px' }}>
-                <strong style={{ display: 'block', marginBottom: '8px' }}>技能：</strong>
+                <strong style={{ display: 'block', marginBottom: '8px' }}>标签：</strong>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                   {memberInfo.shareContent.skills.map((skill, index) => (
                     <Tag key={index} variant="light" theme="primary">

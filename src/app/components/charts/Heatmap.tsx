@@ -52,7 +52,8 @@ const Heatmap: React.FC<HeatmapProps> = ({chartType}: HeatmapProps) => {
             console.error('数据请求失败', error);
         });
 
-    }, []);    return (
+    }, []);    
+    return (
         <div>
             {/* 标题 */}
             <div className="p-4 border-b">

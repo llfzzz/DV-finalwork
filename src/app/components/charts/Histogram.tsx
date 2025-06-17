@@ -242,7 +242,8 @@ export default function Histogram({ chartType }: HistogramProps) {
       .style('fill-opacity', 0.7)
       .style('stroke', config.color)
       .style('stroke-width', 1)
-      .style('cursor', 'pointer')      .on('mouseover', function(event, d) {
+      .style('cursor', 'pointer')      
+      .on('mouseover', function(event, d) {
         setHoveredBin(d);
         setMousePosition({ x: event.pageX, y: event.pageY });
         d3.select(this)
@@ -416,7 +417,8 @@ export default function Histogram({ chartType }: HistogramProps) {
   }
 
   return (
-    <div className="w-full h-full bg-white rounded-lg shadow-lg relative">      {/* 标题 */}
+    <div className="w-full h-full bg-white rounded-lg shadow-lg relative">      
+    {/* 标题 */}
       <div className="p-4 border-b flex justify-between items-center">
         <h2 className="text-2xl font-bold text-gray-800">
           COVID-19 数据分布直方图
@@ -524,7 +526,8 @@ export default function Histogram({ chartType }: HistogramProps) {
           <div className="mt-2 text-sm text-blue-600">
             已选择范围: {selectedRange[0].toFixed(0)} - {selectedRange[1].toFixed(0)}
           </div>
-        )}      </div>      
+        )}      
+        </div>      
       {/* 图表区域 */}
       <div className="p-4">
         <svg ref={svgRef}></svg>

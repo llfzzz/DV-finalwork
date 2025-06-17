@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import * as d3 from 'd3';
-import { Button } from 'tdesign-react';
 import TimeSeriesProvinceSelector from '../ui/TimeSeriesProvinceSelector';
 import ChartDescriptionComponent from '../ui/ChartDescription';
 import { chartDescriptions } from '../../../types/chartDescriptions';
@@ -335,7 +334,8 @@ export default function TimeSeriesChart({ chartType }: TimeSeriesChartProps) {
   }
 
   return (
-    <div className="w-full">      <div className="mb-4 space-y-4">
+    <div className="w-full">      
+    <div className="mb-4 space-y-4">
         <div className="flex justify-between items-center">
           <h3 className="text-2xl font-bold text-gray-800">COVID-19 时间序列图</h3>
           <ChartDescriptionComponent description={chartDescriptions.timeSeriesChart} />
@@ -362,7 +362,8 @@ export default function TimeSeriesChart({ chartType }: TimeSeriesChartProps) {
               </label>
             ))}
           </div>
-        </div>        {/* 省份选择器 */}
+        </div>        
+        {/* 省份选择器 */}
         <TimeSeriesProvinceSelector
           availableProvinces={availableProvinces}
           selectedProvinces={selectedProvinces}
@@ -370,7 +371,8 @@ export default function TimeSeriesChart({ chartType }: TimeSeriesChartProps) {
           onSelectedProvincesChange={setSelectedProvinces}
           loading={loading}
         />
-      </div>      <div className="border rounded-lg p-4 bg-white">
+      </div>      
+      <div className="border rounded-lg p-4 bg-white">
         <svg ref={svgRef}></svg>
       </div>
     </div>

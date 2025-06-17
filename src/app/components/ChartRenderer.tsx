@@ -14,7 +14,8 @@ interface ChartRendererProps {
   chartType: string | null;
 }
 
-export default function ChartRenderer({ chartType }: ChartRendererProps) {  switch (chartType) {
+export default function ChartRenderer({ chartType }: ChartRendererProps) {  
+  switch (chartType) {
     case 'pie-chart':
       return (
         <PieChart chartType={chartType} />
