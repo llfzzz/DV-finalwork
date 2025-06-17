@@ -4,6 +4,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import { Button } from 'tdesign-react';
 import TimeSeriesProvinceSelector from '../ui/TimeSeriesProvinceSelector';
+import ChartDescriptionComponent from '../ui/ChartDescription';
+import { chartDescriptions } from '../../../types/chartDescriptions';
 
 interface TimeSeriesChartProps {
   chartType: string;
@@ -333,9 +335,11 @@ export default function TimeSeriesChart({ chartType }: TimeSeriesChartProps) {
   }
 
   return (
-    <div className="w-full">
-      <div className="mb-4 space-y-4">
-        <h3 className="text-xl font-bold text-gray-800">COVID-19 时间序列图</h3>
+    <div className="w-full">      <div className="mb-4 space-y-4">
+        <div className="flex justify-between items-center">
+          <h3 className="text-2xl font-bold text-gray-800">COVID-19 时间序列图</h3>
+          <ChartDescriptionComponent description={chartDescriptions.timeSeriesChart} />
+        </div>
         
         {/* 数据类型选择 */}
         <div className="flex space-x-4">
@@ -366,17 +370,8 @@ export default function TimeSeriesChart({ chartType }: TimeSeriesChartProps) {
           onSelectedProvincesChange={setSelectedProvinces}
           loading={loading}
         />
-      </div>
-
-      <div className="border rounded-lg p-4 bg-white">
+      </div>      <div className="border rounded-lg p-4 bg-white">
         <svg ref={svgRef}></svg>
-      </div>      <div className="mt-4 text-sm text-gray-600">
-        <p>• 该图展示了COVID-19疫情期间不同地区的时间序列数据</p>
-        <p>• 数据包含全国34个省级行政区（含港澳台）的完整信息</p>
-        <p>• 可以选择不同的数据类型（感染/死亡/康复）和地区进行对比分析</p>
-        <p>• 全国总计数据以粗线显示，便于对比整体趋势</p>
-        <p>• 使用快速选择按钮可以方便地切换不同的省份组合</p>
-        <p>• 图例最多显示10个地区，避免界面拥挤</p>
       </div>
     </div>
   );

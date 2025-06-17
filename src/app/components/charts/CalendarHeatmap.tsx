@@ -2,6 +2,8 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import * as echarts from 'echarts';
+import ChartDescriptionComponent from '../ui/ChartDescription';
+import { chartDescriptions } from '../../../types/chartDescriptions';
 
 interface CalendarHeatmapProps {
   chartType: string;
@@ -298,7 +300,16 @@ const CalendarHeatmap: React.FC<CalendarHeatmapProps> = ({ chartType }) => {
   }, []);
 
   return (
-    <div className="p-4">
+    <div className="p-4">      {/* 标题 */}
+      <div className="mb-6">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-2xl font-bold text-gray-800">
+            COVID-19 日历热力图
+          </h2>
+          <ChartDescriptionComponent description={chartDescriptions.calendarHeatmap} />
+        </div>
+      </div>
+      
       {/* 省份选择器 */}
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -315,18 +326,13 @@ const CalendarHeatmap: React.FC<CalendarHeatmapProps> = ({ chartType }) => {
             </option>
           ))}
         </select>
-      </div>      {/* 图表容器 */}
+      </div>      
+        {/* 图表容器 */}
       <div 
         ref={chartRef} 
         style={{ width: '100%', height: '600px' }}
         className="border border-gray-200 rounded-lg bg-white"
       />
-      
-      {/* 说明 */}
-      <div className="mt-4 text-sm text-gray-600">
-        <p>* 数据显示2020年1月-2月期间的每日新增感染人数</p>
-        <p>* 颜色越深表示当日新增感染人数越多</p>
-      </div>
     </div>
   );
 };

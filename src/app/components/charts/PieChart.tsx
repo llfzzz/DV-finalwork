@@ -3,6 +3,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import ProvinceSelector from '../ui/ProvinceSelector';
+import ChartDescriptionComponent from '../ui/ChartDescription';
+import { chartDescriptions } from '../../../types/chartDescriptions';
 
 interface PieChartProps {
   chartType: string;
@@ -442,11 +444,13 @@ export default function PieChart({ chartType }: PieChartProps) {
   };
 
   return (
-    <div className="w-full h-full p-6 bg-white">
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold text-gray-800 mb-4">
-          COVID-19 数据饼图分析
-        </h2>
+    <div className="w-full h-full p-6 bg-white">      <div className="mb-6">        
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-2xl font-bold text-gray-800">
+            COVID-19 数据饼图分析
+          </h2>
+          <ChartDescriptionComponent description={chartDescriptions.pieChart} />
+        </div>
           <div className="flex flex-wrap gap-4 mb-4">
           {/* 显示模式选择 */}
           <div className="flex items-center gap-2">
@@ -526,9 +530,7 @@ export default function PieChart({ chartType }: PieChartProps) {
           }
           return <svg ref={svgRef}></svg>;
         })()}
-      </div>
-
-      <div className="mt-6 text-xs text-gray-500 text-center">
+      </div>      <div className="mt-6 text-xs text-gray-500 text-center">
         * 鼠标悬停在饼图切片上可查看详细信息
         <br />
         * 数据来源：COVID-19累计统计数据

@@ -4,6 +4,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import { Button } from 'tdesign-react';
 import ProvinceSelector from '../ui/ProvinceSelector';
+import ChartDescriptionComponent from '../ui/ChartDescription';
+import { chartDescriptions } from '../../../types/chartDescriptions';
 
 interface ParallelCoordinatesChartProps {
   chartType: string;
@@ -352,9 +354,11 @@ export default function ParallelCoordinatesChart({ chartType }: ParallelCoordina
   }
 
   return (
-    <div className="space-y-4">
-      <div className="bg-gray-50 p-4 rounded-lg">
-        <h2 className="text-xl font-bold mb-4 text-gray-800">COVID-19 平行坐标图</h2>
+    <div className="space-y-4">      <div className="bg-gray-50 p-4 rounded-lg">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-2xl font-bold text-gray-800">COVID-19 平行坐标图</h2>
+          <ChartDescriptionComponent description={chartDescriptions.parallelCoordinatesChart} />
+        </div>
           {/* 省份选择器 */}
         <ProvinceSelector
           availableProvinces={availableProvinces}
@@ -371,9 +375,7 @@ export default function ParallelCoordinatesChart({ chartType }: ParallelCoordina
 
       <div className="border rounded-lg p-4 bg-white">
         <svg ref={svgRef}></svg>
-      </div>
-
-      <div className="mt-4 text-sm text-gray-600">
+      </div>      <div className="mt-4 text-sm text-gray-600">
         <h3 className="font-bold mb-2">图表说明：</h3>
         <ul className="space-y-1">
           <li>• 每条线代表一个省份在多个维度上的表现</li>

@@ -4,6 +4,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import { Button } from 'tdesign-react';
 import RadarProvinceSelector from '../ui/RadarProvinceSelector';
+import ChartDescriptionComponent from '../ui/ChartDescription';
+import { chartDescriptions } from '../../../types/chartDescriptions';
 
 interface RadarChartProps {
   chartType: string;
@@ -397,9 +399,11 @@ export default function RadarChart({ chartType }: RadarChartProps) {
     );
   }
 
-  return (    <div className="w-full">
-      <div className="mb-4 space-y-4">
-        <h3 className="text-xl font-bold text-gray-800">COVID-19 多维数据雷达图</h3>
+  return (    <div className="w-full">      <div className="mb-4 space-y-4">
+        <div className="flex justify-between items-center">
+          <h3 className="text-2xl font-bold text-gray-800">COVID-19 多维数据雷达图</h3>
+          <ChartDescriptionComponent description={chartDescriptions.radarChart} />
+        </div>
           {/* 省份选择器 */}
         <RadarProvinceSelector
           availableProvinces={availableProvinces}
@@ -453,9 +457,7 @@ export default function RadarChart({ chartType }: RadarChartProps) {
             </table>
           </div>
         </div>
-      )}
-
-      <div className="mt-4 text-sm text-gray-600">
+      )}      <div className="mt-4 text-sm text-gray-600">
         <p>• 该雷达图展示了COVID-19疫情期间不同省份的多维数据对比</p>
         <p>• 数据来源于2020年1月至2月的官方统计</p>
         <p>• 可以选择最多6个省份进行同时比较分析</p>

@@ -2,8 +2,9 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import * as d3 from 'd3';
-import { Button } from 'tdesign-react';
 import ProvinceSelector from '../ui/ProvinceSelector';
+import ChartDescriptionComponent from '../ui/ChartDescription';
+import { chartDescriptions } from '../../../types/chartDescriptions';
 
 interface BarChartProps {
   chartType: string;
@@ -151,7 +152,8 @@ export default function BarChart({ chartType }: BarChartProps) {
 
         const infectionsData = parseCSV(infectionsText);
         const deathsData = parseCSV(deathsText);
-        const recoveriesData = parseCSV(recoveriesText);        const aggregatedData = aggregateByProvince(infectionsData, deathsData, recoveriesData);
+        const recoveriesData = parseCSV(recoveriesText);
+        const aggregatedData = aggregateByProvince(infectionsData, deathsData, recoveriesData);
         setData(aggregatedData);
         
         // 设置可用省份列表
@@ -240,7 +242,9 @@ export default function BarChart({ chartType }: BarChartProps) {
       .style('text-anchor', 'middle')
       .style('font-size', '14px')
       .style('font-weight', 'bold')
-      .text(metricLabels[currentMetric]);    // 绘制柱状图
+      .text(metricLabels[currentMetric]);    
+      
+      // 绘制柱状图
     const bars = g.selectAll('.bar')
       .data(filteredData)
       .enter().append('rect')
@@ -370,9 +374,11 @@ export default function BarChart({ chartType }: BarChartProps) {
     );
   }
 
-  return (    <div className="w-full h-full p-4">
-      <div className="mb-4">
-        <h2 className="text-2xl font-bold mb-4">COVID-19 各地区累计数据对比</h2>
+  return (    <div className="w-full h-full p-4">      <div className="mb-4">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-2xl font-bold text-gray-800">COVID-19 各地区累计数据对比</h2>
+          <ChartDescriptionComponent description={chartDescriptions.barChart} />
+        </div>
         
         {/* 控制面板 */}
         <div className="space-y-4 mb-4">
@@ -433,7 +439,7 @@ export default function BarChart({ chartType }: BarChartProps) {
             maxHeight="12rem"
           />
         </div>
-      </div>{/* 图表 */}
+      </div>        {/* 图表 */}
       <div className="w-full flex-1 overflow-auto">
         <svg 
           ref={svgRef} 
@@ -441,33 +447,7 @@ export default function BarChart({ chartType }: BarChartProps) {
           height={600}
           className="border border-gray-200"
         />
-      </div>      {/* 数据说明 */}
-      <div className="mt-4 p-4 bg-gray-50 rounded-lg text-sm text-gray-600">
-        <h3 className="font-bold mb-2 text-gray-800">图表说明：</h3>
-        <ul className="space-y-1">
-          <li>• <strong>柱状图用途：</strong>对比不同省份的COVID-19累计数据，支持多指标分析</li>
-          <li>• <strong>省份选择：</strong>可通过复选框选择要对比的省份，支持快速选择预设地区组合</li>
-          <li>• <strong>数据指标：</strong>支持切换查看累计感染、死亡、康复三种数据类型</li>
-          <li>• <strong>排序功能：</strong>支持按数值大小进行升序或降序排列</li>
-          <li>• <strong>显示控制：</strong>可限制显示前N名的数据，避免图表过于拥挤</li>
-          <li>• <strong>交互功能：</strong>
-            <ul className="ml-4 mt-1 space-y-1">
-              <li>- 鼠标悬停查看详细数据（包含病死率、康复率等）</li>
-              <li>- 柱状图动画效果，提升视觉体验</li>
-              <li>- 柱形间距为柱形宽度的一半，保持良好的视觉比例</li>
-            </ul>
-          </li>
-          <li>• <strong>快速选择：</strong>提供重点省份、华北、华东、华南等地区组合的快速选择按钮</li>
-          <li>• <strong>数据来源：</strong>基于COVID-19累计统计数据，展示各省份最新数据对比</li>
-        </ul>
-        
-        <div className="mt-3 p-3 bg-blue-50 rounded border-l-4 border-blue-400">
-          <p className="text-blue-800 text-xs">
-            <strong>使用建议：</strong>建议选择5-15个省份进行对比分析，过多的省份会影响图表可读性。
-            可以先选择重点省份进行对比，再根据需要添加其他感兴趣的地区。
-          </p>
-        </div>
-      </div>
+      </div>       
     </div>
   );
 }

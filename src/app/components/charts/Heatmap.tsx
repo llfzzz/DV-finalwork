@@ -52,10 +52,14 @@ const Heatmap: React.FC<HeatmapProps> = ({chartType}: HeatmapProps) => {
             console.error('数据请求失败', error);
         });
 
-    }, []);
-
-    return (
+    }, []);    return (
         <div>
+            {/* 标题 */}
+            <div className="p-4 border-b">
+                <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">
+                    COVID-19 地理热力图
+                </h2>
+            </div>
             <svg ref={svgRef}></svg>
         </div>
     );

@@ -4,6 +4,8 @@ import React, { useRef, useEffect, useState } from 'react';
 import * as d3 from 'd3';
 import { Button } from 'tdesign-react';
 import ProvinceSelector from '../ui/ProvinceSelector';
+import ChartDescriptionComponent from '../ui/ChartDescription';
+import { chartDescriptions } from '../../../types/chartDescriptions';
 
 interface ScatterPlotProps {
   chartType: string;
@@ -333,9 +335,8 @@ export default function ScatterPlot({ chartType }: ScatterPlotProps) {
     circles.transition()
       .duration(750)
       .attr('r', d => sizeScale(d.severity))
-      .style('opacity', 0.8);
-
-    // 添加交互效果
+      .style('opacity', 0.8);    
+      // 添加交互效果
     circles
       .on('mouseover', function(event, d) {
         // 高亮当前点
@@ -382,13 +383,8 @@ export default function ScatterPlot({ chartType }: ScatterPlotProps) {
         d3.selectAll('.tooltip').remove();
       })
       .on('click', function(event, d) {
-        // 区域选择/取消选择
-        const isSelected = selectedRegions.includes(d.province);
-        if (isSelected) {
-          setSelectedRegions(prev => prev.filter(r => r !== d.province));
-        } else {
-          setSelectedRegions(prev => [...prev, d.province]);
-        }
+        // 确保移除提示工具
+        d3.selectAll('.tooltip').remove();
       });
 
     // 根据选择状态更新透明度
@@ -481,9 +477,11 @@ export default function ScatterPlot({ chartType }: ScatterPlotProps) {
     );
   }
 
-  return (    <div className="w-full h-full p-4">
-      <div className="mb-4">
-        <h2 className="text-2xl font-bold mb-4">COVID-19 感染数与死亡数相关性分析</h2>
+  return (    <div className="w-full h-full p-4">      <div className="mb-4">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-2xl font-bold text-gray-800">COVID-19 感染数与死亡数相关性分析</h2>
+          <ChartDescriptionComponent description={chartDescriptions.scatterPlot} />
+        </div>
         
         {/* 控制面板 */}
         <div className="space-y-4 mb-4">
@@ -531,9 +529,7 @@ export default function ScatterPlot({ chartType }: ScatterPlotProps) {
           <p>• 点的大小：表示疫情严重程度（感染数 + 死亡数×10）</p>
           <p>• 点的颜色：按省份区分（图例显示疫情最严重的前10个省份）</p>
         </div>
-      </div>
-
-      {/* 图表 */}
+      </div>      {/* 图表 */}
       <div className="w-full overflow-x-auto">
         <svg 
           ref={svgRef} 
@@ -541,39 +537,6 @@ export default function ScatterPlot({ chartType }: ScatterPlotProps) {
           height={600}
           className="border border-gray-200"
         />
-      </div>      {/* 交互说明 */}
-      <div className="mt-4 p-4 bg-gray-50 rounded-lg text-sm text-gray-600">
-        <h3 className="font-bold mb-2 text-gray-800">图表说明：</h3>
-        <ul className="space-y-1">
-          <li>• <strong>散点图用途：</strong>分析COVID-19感染数与死亡数之间的相关性，发现疫情传播规律</li>
-          <li>• <strong>省份选择：</strong>可通过复选框选择要分析的省份，支持快速选择预设地区组合</li>
-          <li>• <strong>坐标轴含义：</strong>X轴为累计感染数，Y轴为累计死亡数</li>
-          <li>• <strong>点的属性：</strong>
-            <ul className="ml-4 mt-1 space-y-1">
-              <li>- 点的大小：表示疫情严重程度（感染数 + 死亡数×10）</li>
-              <li>- 点的颜色：按省份区分，便于识别不同地区</li>
-              <li>- 点的位置：反映感染数与死亡数的关系</li>
-            </ul>
-          </li>
-          <li>• <strong>相关性分析：</strong>红色虚线显示线性回归趋势线，相关系数显示两者相关程度</li>
-          <li>• <strong>交互功能：</strong>
-            <ul className="ml-4 mt-1 space-y-1">
-              <li>- 鼠标悬停：查看省份详细数据（感染、死亡、康复、病死率等）</li>
-              <li>- 点击选择：单击点选择/取消选择省份</li>
-              <li>- 框选功能：拖拽鼠标框选多个省份进行群组分析</li>
-              <li>- 动画效果：点的大小动画展现数据变化</li>
-            </ul>
-          </li>
-          <li>• <strong>图例说明：</strong>右侧显示疫情最严重的前10个省份的颜色对应关系</li>
-          <li>• <strong>数据来源：</strong>基于COVID-19累计统计数据的最新值进行分析</li>
-        </ul>
-        
-        <div className="mt-3 p-3 bg-blue-50 rounded border-l-4 border-blue-400">
-          <p className="text-blue-800 text-xs">
-            <strong>分析提示：</strong>通过散点图可以识别异常值、发现数据聚类模式，以及评估不同地区疫情严重程度的分布规律。
-            相关系数接近1表示强正相关，接近0表示无相关性。
-          </p>
-        </div>
       </div>
     </div>
   );

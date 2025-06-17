@@ -3,6 +3,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import BoxPlotProvinceSelector from '../ui/BoxPlotProvinceSelector';
+import ChartDescriptionComponent from '../ui/ChartDescription';
+import { chartDescriptions } from '../../../types/chartDescriptions';
 
 interface BoxPlotProps {
   chartType: string;
@@ -119,153 +121,150 @@ export default function BoxPlot({ chartType }: BoxPlotProps) {
     
     return { q1, median, q3, min, max, outliers };
   };
-
   // 处理数据并计算箱线图统计信息
-  const processDataForBoxPlot = (
-    infectionsData: RegionData[],
-    deathsData: RegionData[],
-    recoveriesData: RegionData[]
-  ): BoxPlotData[] => {
-    const allData = new Map<string, Map<string, { infections: number[]; deaths: number[]; recoveries: number[] }>>();
+  const processDataForBoxPlot = async (
+    selectedProvincesFiltered: string[]
+  ): Promise<BoxPlotData[]> => {
+    // 读取真实的CSV数据
+    try {
+      const [infectionsResponse, deathsResponse, recoveriesResponse] = await Promise.all([
+        fetch('/data/China_accumulated_infections.csv'),
+        fetch('/data/China_accumulated_deaths.csv'),
+        fetch('/data/China_accumulated_recoveries.csv')
+      ]);
 
-    // 合并所有数据类型
-    const processDataByType = (data: RegionData[], type: 'infections' | 'deaths' | 'recoveries') => {
-      data.forEach(item => {
-        const groupKey = groupBy === 'province' ? item.province : 
-                       groupBy === 'time' ? item.date.substring(0, 7) : item.province; // 按月分组
+      const [infectionsText, deathsText, recoveriesText] = await Promise.all([
+        infectionsResponse.text(),
+        deathsResponse.text(),
+        recoveriesResponse.text()
+      ]);
 
-        if (!allData.has(groupKey)) {
-          allData.set(groupKey, new Map());
+      // 解析CSV数据
+      const parseCSVData = (csvText: string): Map<string, { regions: string[], values: number[][] }> => {
+        const lines = csvText.trim().split('\n');
+        const headers = lines[0].split(',');
+        const dateColumns = headers.slice(4); // 跳过前4列
+        
+        const provinceData = new Map<string, { regions: string[], values: number[][] }>();
+        
+        for (let i = 1; i < lines.length; i++) {
+          const row = lines[i].split(',');
+          if (row.length < headers.length) continue;
+          
+          const region = row[2] || row[0]; // 地区名
+          const province = row[3] || row[1]; // 省份名
+          
+          if (!provinceData.has(province)) {
+            provinceData.set(province, { regions: [], values: [] });
+          }
+          
+          const data = provinceData.get(province)!;
+          data.regions.push(region);
+          
+          // 提取该地区在所有日期的数值
+          const regionValues: number[] = [];
+          for (let j = 4; j < row.length; j++) {
+            const value = parseFloat(row[j]);
+            if (!isNaN(value) && value >= 0) {
+              regionValues.push(value);
+            }
+          }
+          // 只取最后一个时间点的值（累计最大值）
+          if (regionValues.length > 0) {
+            data.values.push([Math.max(...regionValues)]);
+          }
         }
         
-        const groupData = allData.get(groupKey)!;
-        if (!groupData.has(type)) {
-          groupData.set(type, { infections: [], deaths: [], recoveries: [] });
-        }
-        
-        const typeData = groupData.get(type)!;
-        typeData[type].push(item[type]);
-      });
-    };
-
-    // 模拟数据处理（实际应该从CSV正确解析）
-    const simulateDataFromCSV = async () => {
-      try {
-        const [infectionsResponse, deathsResponse, recoveriesResponse] = await Promise.all([
-          fetch('/data/China_accumulated_infections.csv'),
-          fetch('/data/China_accumulated_deaths.csv'),
-          fetch('/data/China_accumulated_recoveries.csv')
-        ]);
-
-        const [infectionsText, deathsText, recoveriesText] = await Promise.all([
-          infectionsResponse.text(),
-          deathsResponse.text(),
-          recoveriesResponse.text()
-        ]);
-
-        return { infectionsText, deathsText, recoveriesText };
-      } catch (error) {
-        throw new Error('数据加载失败');
-      }
-    };    // 创建省份箱线图数据
-    const selectedProvincesFiltered = selectedProvinces.filter(p => p !== null) as string[];
-    const provincesToShow = selectedProvincesFiltered.length > 0 ? selectedProvincesFiltered : 
-      ['湖北省', '广东省', '浙江省', '河南省', '湖南省', '安徽省', '江西省', '山东省', '江苏省', '重庆市'];
-    const boxPlotData: BoxPlotData[] = [];
-
-    provincesToShow.forEach(province => {
-      // 模拟省份内各地区的数据分布
-      const generateProvinceData = (baseValue: number, variance: number) => {
-        const regionCount = Math.floor(Math.random() * 15) + 5; // 5-20个地区
-        return Array.from({ length: regionCount }, () => {
-          const variation = (Math.random() - 0.5) * variance;
-          return Math.max(0, baseValue + variation);
-        });
+        return provinceData;
       };
 
-      // 根据省份生成不同的基础数据
-      let infectionsBase = 0, deathsBase = 0, recoveriesBase = 0;
+      const infectionsData = parseCSVData(infectionsText);
+      const deathsData = parseCSVData(deathsText);
+      const recoveriesData = parseCSVData(recoveriesText);
+
+      const provincesToShow = selectedProvincesFiltered.length > 0 ? selectedProvincesFiltered : 
+        ['湖北省', '广东省', '浙江省', '河南省', '湖南省', '安徽省', '江西省', '山东省', '江苏省', '重庆市'];
       
-      switch (province) {
-        case '湖北省':
-          infectionsBase = 50000; deathsBase = 2000; recoveriesBase = 40000;
-          break;
-        case '广东省':
-          infectionsBase = 1500; deathsBase = 8; recoveriesBase = 1400;
-          break;
-        case '浙江省':
-          infectionsBase = 1200; deathsBase = 1; recoveriesBase = 1180;
-          break;
-        case '河南省':
-          infectionsBase = 1270; deathsBase = 22; recoveriesBase = 1250;
-          break;
-        default:
-          infectionsBase = Math.random() * 1000 + 100;
-          deathsBase = Math.random() * 50 + 1;
-          recoveriesBase = infectionsBase * 0.9;
-      }
+      const boxPlotData: BoxPlotData[] = [];
 
-      // 生成感染数据分布
-      if (selectedCategory === 'infections') {
-        const values = generateProvinceData(infectionsBase, infectionsBase * 0.8);
-        const stats = calculateBoxPlotStats(values);
-        const outlierDetails = stats.outliers.map(value => ({
-          value,
-          region: `${province}某地区`,
-          date: '2020-03-15'
-        }));
+      provincesToShow.forEach(province => {
+        // 获取该省份的真实数据
+        const getProvinceValues = (dataMap: Map<string, { regions: string[], values: number[][] }>, province: string): number[] => {
+          const provinceInfo = dataMap.get(province);
+          if (!provinceInfo || provinceInfo.values.length === 0) {
+            return [];
+          }
+          
+          // 将所有地区的值合并为一个数组
+          return provinceInfo.values.flat().filter(v => v > 0);
+        };
 
-        boxPlotData.push({
-          category: '感染数分布',
-          province,
-          ...stats,
-          outliers: outlierDetails,
-          values
-        });
-      }
+        if (selectedCategory === 'infections') {
+          const values = getProvinceValues(infectionsData, province);
+          if (values.length > 0) {
+            const stats = calculateBoxPlotStats(values);
+            const outlierDetails = stats.outliers.map(value => ({
+              value,
+              region: `${province}某地区`,
+              date: '2020-03-15'
+            }));
 
-      // 生成死亡数据分布
-      if (selectedCategory === 'deaths') {
-        const values = generateProvinceData(deathsBase, deathsBase * 1.2);
-        const stats = calculateBoxPlotStats(values);
-        const outlierDetails = stats.outliers.map(value => ({
-          value,
-          region: `${province}某地区`,
-          date: '2020-03-15'
-        }));
+            boxPlotData.push({
+              category: '感染数分布',
+              province,
+              ...stats,
+              outliers: outlierDetails,
+              values
+            });
+          }
+        }
 
-        boxPlotData.push({
-          category: '死亡数分布',
-          province,
-          ...stats,
-          outliers: outlierDetails,
-          values
-        });
-      }
+        if (selectedCategory === 'deaths') {
+          const values = getProvinceValues(deathsData, province);
+          if (values.length > 0) {
+            const stats = calculateBoxPlotStats(values);
+            const outlierDetails = stats.outliers.map(value => ({
+              value,
+              region: `${province}某地区`,
+              date: '2020-03-15'
+            }));
 
-      // 生成康复数据分布
-      if (selectedCategory === 'recoveries') {
-        const values = generateProvinceData(recoveriesBase, recoveriesBase * 0.6);
-        const stats = calculateBoxPlotStats(values);
-        const outlierDetails = stats.outliers.map(value => ({
-          value,
-          region: `${province}某地区`,
-          date: '2020-03-15'
-        }));
+            boxPlotData.push({
+              category: '死亡数分布',
+              province,
+              ...stats,
+              outliers: outlierDetails,
+              values
+            });
+          }
+        }
 
-        boxPlotData.push({
-          category: '康复数分布',
-          province,
-          ...stats,
-          outliers: outlierDetails,
-          values
-        });
-      }
-    });
+        if (selectedCategory === 'recoveries') {
+          const values = getProvinceValues(recoveriesData, province);
+          if (values.length > 0) {
+            const stats = calculateBoxPlotStats(values);
+            const outlierDetails = stats.outliers.map(value => ({
+              value,
+              region: `${province}某地区`,
+              date: '2020-03-15'
+            }));
 
-    return boxPlotData;
+            boxPlotData.push({
+              category: '康复数分布',
+              province,
+              ...stats,
+              outliers: outlierDetails,
+              values
+            });
+          }
+        }
+      });
+
+      return boxPlotData;
+    } catch (error) {
+      throw new Error('数据加载失败: ' + (error instanceof Error ? error.message : '未知错误'));
+    }
   };
-
   // 加载和处理数据
   useEffect(() => {
     const loadData = async () => {
@@ -273,12 +272,10 @@ export default function BoxPlot({ chartType }: BoxPlotProps) {
         setLoading(true);
         setError(null);
 
-        // 模拟数据加载（实际项目中应该正确解析CSV）
-        const mockInfectionsData: RegionData[] = [];
-        const mockDeathsData: RegionData[] = [];
-        const mockRecoveriesData: RegionData[] = [];
-
-        const processedData = processDataForBoxPlot(mockInfectionsData, mockDeathsData, mockRecoveriesData);
+        // 获取选中的省份
+        const selectedProvincesFiltered = selectedProvinces.filter(p => p !== null) as string[];
+        
+        const processedData = await processDataForBoxPlot(selectedProvincesFiltered);
         setData(processedData);
       } catch (err) {
         setError(err instanceof Error ? err.message : '数据加载出错');
@@ -288,7 +285,7 @@ export default function BoxPlot({ chartType }: BoxPlotProps) {
     };
 
     loadData();
-  }, [selectedCategory, groupBy]);
+  }, [selectedCategory, groupBy, selectedProvinces]);
 
   // 绘制箱线图
   useEffect(() => {
@@ -616,9 +613,11 @@ export default function BoxPlot({ chartType }: BoxPlotProps) {
   }
 
   return (
-    <div className="w-full">
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold text-gray-800 mb-2">箱线图 - COVID-19数据分布分析</h2>
+    <div className="w-full">      <div className="mb-6">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-2xl font-bold text-gray-800">箱线图 - COVID-19数据分布分析</h2>
+          <ChartDescriptionComponent description={chartDescriptions.boxPlot} />
+        </div>
         <p className="text-gray-600">
           展示各省份疫情数据的分布特征，包括四分位数、中位数和异常值
         </p>
@@ -649,21 +648,8 @@ export default function BoxPlot({ chartType }: BoxPlotProps) {
                 关闭
               </button>
             </div>
-          </div>
-        </div>
+          </div>        </div>
       )}
-
-      {/* 图表说明 */}
-      <div className="mt-6 bg-blue-50 rounded-lg p-4">
-        <h3 className="text-lg font-semibold text-blue-800 mb-2">图表说明</h3>
-        <div className="text-sm text-blue-700 space-y-1">
-          <p>• <strong>箱体:</strong> 表示数据的第一四分位数(Q1)到第三四分位数(Q3)的范围</p>
-          <p>• <strong>中位数线:</strong> 箱体中间的粗线表示数据的中位数(Q2)</p>
-          <p>• <strong>须线:</strong> 延伸到最小值和最大值(排除异常值)</p>
-          <p>• <strong>红色圆点:</strong> 异常值，点击可查看详细信息</p>
-          <p>• <strong>交互功能:</strong> 可筛选省份、切换数据类别、查看异常值详情</p>
-        </div>
-      </div>
     </div>
   );
 }

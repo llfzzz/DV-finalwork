@@ -2,6 +2,8 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
+import ChartDescriptionComponent from '../ui/ChartDescription';
+import { chartDescriptions } from '../../../types/chartDescriptions';
 
 interface HistogramProps {
   chartType: string;
@@ -37,6 +39,7 @@ export default function Histogram({ chartType }: HistogramProps) {
   const [showDensityCurve, setShowDensityCurve] = useState<boolean>(true);
   const [selectedRange, setSelectedRange] = useState<[number, number] | null>(null);
   const [hoveredBin, setHoveredBin] = useState<BinData | null>(null);
+  const [mousePosition, setMousePosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
 
   // 定义指标配置
   const metricsConfig = {
@@ -239,12 +242,15 @@ export default function Histogram({ chartType }: HistogramProps) {
       .style('fill-opacity', 0.7)
       .style('stroke', config.color)
       .style('stroke-width', 1)
-      .style('cursor', 'pointer')
-      .on('mouseover', function(event, d) {
+      .style('cursor', 'pointer')      .on('mouseover', function(event, d) {
         setHoveredBin(d);
+        setMousePosition({ x: event.pageX, y: event.pageY });
         d3.select(this)
           .style('fill-opacity', 0.9)
           .style('stroke-width', 2);
+      })
+      .on('mousemove', function(event) {
+        setMousePosition({ x: event.pageX, y: event.pageY });
       })
       .on('mouseout', function() {
         setHoveredBin(null);
@@ -367,11 +373,11 @@ export default function Histogram({ chartType }: HistogramProps) {
       std: d3.deviation(filteredValues) || 0,
       min: d3.min(filteredValues) || 0,
       max: d3.max(filteredValues) || 0
-    };
-
+    };    
+    
     const statsGroup = g.append('g')
       .attr('class', 'stats')
-      .attr('transform', `translate(${innerWidth + 20}, ${legendY + 40})`);
+      .attr('transform', `translate(${innerWidth + 20}, ${legendY + 60})`);
 
     const statsData = [
       { label: '样本数量', value: stats.count.toFixed(0) },
@@ -410,9 +416,35 @@ export default function Histogram({ chartType }: HistogramProps) {
   }
 
   return (
-    <div className="w-full h-full bg-white rounded-lg shadow-lg">
+    <div className="w-full h-full bg-white rounded-lg shadow-lg relative">      {/* 标题 */}
+      <div className="p-4 border-b flex justify-between items-center">
+        <h2 className="text-2xl font-bold text-gray-800">
+          COVID-19 数据分布直方图
+        </h2>
+        <ChartDescriptionComponent description={chartDescriptions.histogram} />
+      </div>
+
+      {/* 悬浮提示框 */}
+      {hoveredBin && (
+        <div 
+          className="absolute z-10 bg-gray-800 text-white p-3 rounded-lg shadow-lg text-sm pointer-events-none"
+          style={{
+            left: mousePosition.x + 15,
+            top: mousePosition.y - 50,
+            transform: 'translate(-50%, 0)'
+          }}
+        >
+          <div className="font-medium mb-1">区间信息</div>
+          <div>区间: {hoveredBin.x0?.toFixed(0)} - {hoveredBin.x1?.toFixed(0)}</div>
+          <div>频次: {hoveredBin.length}</div>
+          <div>包含地区: {hoveredBin.slice(0, 3).map((d: RegionData) => d.region).join(', ')}
+            {hoveredBin.length > 3 && ` 等${hoveredBin.length}个地区`}
+          </div>
+        </div>
+      )}
+
       {/* 控制面板 */}
-      <div className="p-4 border-b bg-gray-50 rounded-t-lg">
+      <div className="p-4 border-b bg-gray-50">
         <div className="flex flex-wrap gap-4 items-center">
           {/* 指标选择 */}
           <div className="flex items-center gap-2">
@@ -486,48 +518,17 @@ export default function Histogram({ chartType }: HistogramProps) {
               清除选择
             </button>
           )}
-        </div>
-
+        </div>        
         {/* 选择范围信息 */}
         {selectedRange && (
           <div className="mt-2 text-sm text-blue-600">
             已选择范围: {selectedRange[0].toFixed(0)} - {selectedRange[1].toFixed(0)}
           </div>
-        )}        {/* 悬浮信息 */}
-        {hoveredBin && (
-          <div className="mt-2 text-sm text-gray-600">
-            区间: {hoveredBin.x0?.toFixed(0)} - {hoveredBin.x1?.toFixed(0)}, 
-            频次: {hoveredBin.length}, 
-            包含地区: {hoveredBin.slice(0, 3).map((d: RegionData) => d.region).join(', ')}
-            {hoveredBin.length > 3 && ` 等${hoveredBin.length}个地区`}
-          </div>
-        )}
-      </div>      {/* 图表区域 */}
+        )}      </div>      
+      {/* 图表区域 */}
       <div className="p-4">
         <svg ref={svgRef}></svg>
-      </div>
-
-      {/* 图形说明 */}
-      <div className="mt-4 p-4 bg-gray-50 rounded-lg text-sm text-gray-600">
-        <h3 className="font-bold mb-2 text-gray-800">图表说明：</h3>
-        <ul className="space-y-1">
-          <li>• <strong>直方图用途：</strong>显示COVID-19疫情数据在各地区的分布情况，帮助理解数据的频率分布特征</li>
-          <li>• <strong>数据维度：</strong>可选择查看累计感染、累计死亡或累计康复数据的分布</li>
-          <li>• <strong>柱状图：</strong>每个柱子代表一个数值区间，柱子高度表示落在该区间内的地区数量</li>
-          <li>• <strong>正态曲线：</strong>红色虚线显示理论正态分布，用于比较实际数据与正态分布的差异</li>
-          <li>• <strong>密度曲线：</strong>蓝色实线显示数据的实际概率密度分布</li>
-          <li>• <strong>交互功能：</strong>
-            <ul className="ml-4 mt-1 space-y-1">
-              <li>- 鼠标悬停查看详细的区间信息和包含的地区列表</li>
-              <li>- 支持在图表上拖拽选择数值范围进行筛选</li>
-              <li>- 可调节分组数量（柱子数量）或使用自动分组</li>
-              <li>- 可选择显示/隐藏正态曲线和密度曲线</li>
-            </ul>
-          </li>
-          <li>• <strong>统计意义：</strong>通过直方图可以观察数据的集中趋势、离散程度和分布形状（正偏、负偏或正态）</li>
-          <li>• <strong>应用场景：</strong>适合分析疫情影响的地区差异性，识别高风险地区集群和数据异常值</li>
-        </ul>
-      </div>
+      </div>        
     </div>
   );
 }
